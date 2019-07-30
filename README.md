@@ -8,7 +8,7 @@ CurrencyConverter is a simple app where you can easily convert most used currenc
 ```
 The MIT License (MIT)
 
-Copyright (c) 2018 Vladimir Petrovski
+Copyright (c) 2019 Vladimir Petrovski
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
