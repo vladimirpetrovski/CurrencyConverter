@@ -6,7 +6,10 @@ import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
 
-@Module
+@Module(
+    includes = [
+        NetworkModule::class]
+)
 abstract class AppModule {
 
     @Singleton
