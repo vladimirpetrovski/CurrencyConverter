@@ -17,7 +17,11 @@ object CalculateRatesHelper {
             )
         }.toMutableList() // calculated rate
 
-        list.add(0, CalculatedRate()) // selected rate
+        list.add(
+            0, CalculatedRate(
+                amount = amount
+            )
+        ) // selected rate
 
         return list
     }

@@ -1,5 +1,6 @@
-package com.vladimirpetrovski.currencyconverter.data.network
+package com.vladimirpetrovski.currencyconverter.mocks
 
+import com.vladimirpetrovski.currencyconverter.data.network.RatesService
 import com.vladimirpetrovski.currencyconverter.data.network.model.response.RatesResponse
 import io.reactivex.Single
 

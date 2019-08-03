@@ -1,9 +1,9 @@
 package com.vladimirpetrovski.currencyconverter.data.repository
 
-import com.vladimirpetrovski.currencyconverter.data.network.MockRatesService
 import com.vladimirpetrovski.currencyconverter.data.network.RatesService
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
+import com.vladimirpetrovski.currencyconverter.mocks.MockRatesService
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
