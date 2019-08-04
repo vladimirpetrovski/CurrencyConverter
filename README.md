@@ -1,7 +1,7 @@
 # CurrencyConverter
-CurrencyConverter is a simple app where you can easily convert most used currencies by tapping on the currency an entering any amount of money.
+CurrencyConverter is a simple app where you can easily convert most used currencies by tapping on the currency and entering any amount of money.
 
-Its architecture is based on [Clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) according to Uncle Bob. Technologies that were used in this projects are Kotlin, MVVM, RxJava and Dagger2.
+The architecture is based on [Clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) according to Uncle Bob. Technologies that were used in this projects are Kotlin, MVVM, RxJava and Dagger2.
 
 ![Rate app demo](demo.gif)
 
