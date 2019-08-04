@@ -6,18 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterInside
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.squareup.picasso.Picasso
 import com.vladimirpetrovski.currencyconverter.R
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
+import com.vladimirpetrovski.currencyconverter.ui.utils.CropBitmapTransformation
 import com.vladimirpetrovski.currencyconverter.ui.utils.DecimalDigitsInputFilter
 import com.vladimirpetrovski.currencyconverter.ui.utils.placeCursorToEnd
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_rate.view.*
 import java.text.NumberFormat
 import java.util.ArrayList
@@ -129,19 +126,11 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.Rat
     }
 
     private fun RateViewHolder.loadFlagImage(item: CalculatedRate) {
-        val drawable = CircularProgressDrawable(itemView.context)
-        drawable.strokeWidth = 5f
-        drawable.centerRadius = 30f
-        drawable.start()
-        Glide.with(itemView.context)
+        Picasso.get()
             .load(item.flagUrl)
-            .placeholder(drawable)
-            .transform(
-                MultiTransformation(
-                    CircleCrop(), CenterInside()
-                )
-            )
-            .transition(DrawableTransitionOptions.withCrossFade())
+            .transform(listOf(CropBitmapTransformation(), CropCircleTransformation()))
+            .centerCrop()
+            .resize(220, 220)
             .into(itemView.currencyFlag)
     }
 

@@ -56,6 +56,5 @@ object CalculateRatesHelper {
         val currencyInstance = Currency.getInstance(currency) // validate currency code
         val countryCode = currencyInstance.currencyCode.substring(0, 2)
         return "https://www.countryflags.io/$countryCode/flat/64.png"
-//        return "http://www.geognos.com/api/en/countries/flag/$countryCode.png"
     }
 }
