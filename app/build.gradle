@@ -17,11 +17,20 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("../keystore/rates.keystore")
+            storePassword "rates1234"
+            keyAlias "rates"
+            keyPassword "rates1234"
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -42,6 +51,11 @@ android {
             buildConfigField "String", "API_URL", "\"https://revolut.duckdns.org/\""
         }
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 configurations {
@@ -55,6 +69,7 @@ dependencies {
     // Android
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:1.0.2"
+    implementation "com.google.android.material:material:1.1.0-alpha08"
     implementation "androidx.core:core-ktx:1.0.2"
     implementation "androidx.fragment:fragment-ktx:1.2.0-alpha01"
     implementation "androidx.constraintlayout:constraintlayout:1.1.3"
