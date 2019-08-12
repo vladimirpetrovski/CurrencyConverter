@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.vladimirpetrovski.currencyconverter.R
 import com.vladimirpetrovski.currencyconverter.ui.utils.showSnackBar
@@ -60,12 +61,21 @@ class HomeFragment : DaggerFragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerViewRates.layoutManager = layoutManager
         recyclerViewRates.adapter = adapter
+        recyclerViewRates.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    viewModel.pauseUpdates()
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    viewModel.resumeUpdates()
+                }
+            }
+        })
 
         adapter.setOnRateClickListener {
-            it?.let {
-                viewModel.pickCurrency(it)
-                recyclerViewRates.scrollToPosition(0)
-            }
+            viewModel.pickCurrency(it)
+            recyclerViewRates.scrollToPosition(0)
         }
 
         adapter.setOnAmountChangeListener {
