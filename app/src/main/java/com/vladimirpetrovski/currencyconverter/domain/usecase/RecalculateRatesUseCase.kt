@@ -21,8 +21,7 @@ class RecalculateRatesUseCase @Inject constructor(
             amount,
             ratesRepository.cachedLatestRates
         )
-        ratesRepository.cachedCalculatedRates.clear()
-        ratesRepository.cachedCalculatedRates.addAll(list)
+        ratesRepository.cachedCalculatedRates = list
         return Single.just(list)
     }
 }

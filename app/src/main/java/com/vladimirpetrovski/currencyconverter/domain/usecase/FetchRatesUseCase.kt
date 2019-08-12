@@ -24,13 +24,11 @@ class FetchRatesUseCase @Inject constructor(
             .map { latestRates ->
                 if (ratesRepository.cachedCalculatedRates.isEmpty()) {
                     val list = initialCalculate(amount, latestRates)
-                    ratesRepository.cachedCalculatedRates.clear()
-                    ratesRepository.cachedCalculatedRates.addAll(list)
+                    ratesRepository.cachedCalculatedRates = list
                     return@map list
                 }
                 val list = calculate(ratesRepository.cachedCalculatedRates, amount, latestRates)
-                ratesRepository.cachedCalculatedRates.clear()
-                ratesRepository.cachedCalculatedRates.addAll(list)
+                ratesRepository.cachedCalculatedRates = list
                 return@map list
             }
     }

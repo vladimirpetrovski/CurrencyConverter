@@ -17,10 +17,13 @@ class SelectRateUseCase @Inject constructor(
     operator fun invoke(currentCurrency: String): Single<List<CalculatedRate>> {
         val oldIndex = ratesRepository.cachedCalculatedRates
             .indexOfFirst { rate -> rate.currency == currentCurrency }
-        ratesRepository.cachedCalculatedRates.add(
-            0,
-            ratesRepository.cachedCalculatedRates.removeAt(oldIndex)
-        )
+
+        val mutableList = ratesRepository.cachedCalculatedRates.toMutableList()
+        val rate = mutableList.removeAt(oldIndex)
+        mutableList.add(0, rate)
+
+        ratesRepository.cachedCalculatedRates = mutableList
+
         return Single.just(ratesRepository.cachedCalculatedRates)
     }
 }
