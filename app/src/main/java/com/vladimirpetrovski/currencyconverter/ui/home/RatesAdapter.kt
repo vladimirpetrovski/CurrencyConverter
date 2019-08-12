@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -16,23 +17,15 @@ import com.vladimirpetrovski.currencyconverter.ui.utils.DecimalDigitsInputFilter
 import com.vladimirpetrovski.currencyconverter.ui.utils.placeCursorToEnd
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_rate.view.*
+import timber.log.Timber
 import java.text.NumberFormat
-import java.util.ArrayList
 import javax.inject.Inject
 
-class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.RateViewHolder>() {
-
-    private val list = ArrayList<CalculatedRate>()
+class RatesAdapter @Inject constructor() :
+    ListAdapter<CalculatedRate, RatesAdapter.RateViewHolder>(COMPARATOR) {
 
     private var onRateClickListener: OnRateClickListener? = null
     private var onAmountChangeListener: OnAmountChangeListener? = null
-
-    fun submitList(newList: List<CalculatedRate>) {
-        val diffResult = DiffUtil.calculateDiff(CalculatedRateDiffCallback(newList, list))
-        this.list.clear()
-        this.list.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RateViewHolder {
         return RateViewHolder(
@@ -47,14 +40,6 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.Rat
     override fun onBindViewHolder(holder: RateViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
-    fun getItem(position: Int): CalculatedRate {
-        return list[position]
     }
 
     fun setOnRateClickListener(listener: (CalculatedRate?) -> Unit) {
@@ -93,7 +78,7 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.Rat
             val number = format.format(item.amount)
             itemView.amount.setText(number)
             itemView.amount.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(10, 2))
-//            itemView.amount.isFocusable = item.isEnabled
+//            itemView.amount.isEnabled = item.isEnabled
 
             itemView.rateContent.clicks()
                 .doOnNext {
@@ -144,28 +129,26 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.Rat
         fun onChange(amount: Double)
     }
 
-    class CalculatedRateDiffCallback(
-        private val newRows: List<CalculatedRate>,
-        private val oldRows: List<CalculatedRate>
-    ) : DiffUtil.Callback() {
+    companion object {
 
-        override fun getOldListSize() = oldRows.size
+        val COMPARATOR = object : DiffUtil.ItemCallback<CalculatedRate>() {
 
-        override fun getNewListSize() = newRows.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldRow = oldRows[oldItemPosition]
-            val newRow = newRows[newItemPosition]
-            return oldRow.currency == newRow.currency
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            if (newItemPosition == 0) {
-                return true // prevent updates on first item in order to preserve edit text changes
+            override fun areItemsTheSame(
+                oldItem: CalculatedRate,
+                newItem: CalculatedRate
+            ): Boolean {
+                return oldItem.currency == newItem.currency
             }
-            val oldRow = oldRows[oldItemPosition]
-            val newRow = newRows[newItemPosition]
-            return oldRow == newRow
+
+            override fun areContentsTheSame(
+                oldItem: CalculatedRate,
+                newItem: CalculatedRate
+            ): Boolean {
+                if (newItem.isEnabled) {
+                    return true
+                }
+                return oldItem.amount == newItem.amount
+            }
         }
     }
 }

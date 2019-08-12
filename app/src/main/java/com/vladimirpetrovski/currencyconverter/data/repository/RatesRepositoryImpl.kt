@@ -4,14 +4,20 @@ import com.vladimirpetrovski.currencyconverter.data.network.RatesService
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import javax.inject.Inject
 
 class RatesRepositoryImpl @Inject constructor(
     private val ratesService: RatesService
 ) : RatesRepository {
 
-    override val cachedLatestRates = mutableListOf<Rate>()
+    private val cachedCalculatedRatesObservable =
+        BehaviorSubject.createDefault(emptyList<CalculatedRate>())
+
+    override var cachedLatestRates: List<Rate> = emptyList()
 
     override fun fetchLatestRates(baseCurrency: String): Single<List<Rate>> {
         return ratesService.getLatestRates(baseCurrency)
@@ -24,15 +30,22 @@ class RatesRepositoryImpl @Inject constructor(
                 }
             }
             .doOnSuccess {
-                cachedLatestRates.clear()
-                cachedLatestRates.addAll(it)
+                cachedLatestRates = it
             }
     }
 
-    override val cachedCalculatedRates = mutableListOf<CalculatedRate>()
+    override var cachedCalculatedRates: List<CalculatedRate> = emptyList()
+        set(value) {
+            field = value
+            cachedCalculatedRatesObservable.onNext(value)
+        }
+
+    override fun observeCachedCalculatedRatesChanges(): Flowable<List<CalculatedRate>> {
+        return cachedCalculatedRatesObservable.toFlowable(BackpressureStrategy.BUFFER)
+    }
 
     override fun clear() {
-        cachedLatestRates.clear()
-        cachedCalculatedRates.clear()
+        cachedLatestRates = emptyList()
+        cachedCalculatedRates = emptyList()
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.usecase.ClearCacheUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.FetchRatesUseCase
+import com.vladimirpetrovski.currencyconverter.domain.usecase.ListenCalculatedRatesUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.RecalculateRatesUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.SelectRateUseCase
 import io.reactivex.BackpressureStrategy
@@ -20,7 +21,8 @@ class HomeViewModel @Inject constructor(
     private val fetchRatesUseCase: FetchRatesUseCase,
     private val selectRateUseCase: SelectRateUseCase,
     private val recalculateRatesUseCase: RecalculateRatesUseCase,
-    private val clearCacheUseCase: ClearCacheUseCase
+    private val clearCacheUseCase: ClearCacheUseCase,
+    private val listenCalculatedRatesUseCase: ListenCalculatedRatesUseCase
 ) : ViewModel() {
 
     private val compositeDouble = CompositeDisposable()
@@ -37,8 +39,6 @@ class HomeViewModel @Inject constructor(
 
     private var current = CalculatedRate()
 
-    private var pollingEnabled: Boolean = true
-
     fun load() {
         startPolling()
         listenCurrencyChanges()
@@ -46,6 +46,13 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun startPolling() {
+        compositeDouble.add(
+            listenCalculatedRatesUseCase()
+                .throttleFirst(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
+                .subscribe {
+                    list.postValue(it)
+                }
+        )
         compositeDouble.add(
             Flowable.interval(0, REFRESH_INTERVAL, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
@@ -62,29 +69,23 @@ class HomeViewModel @Inject constructor(
                         retry.toFlowable(BackpressureStrategy.BUFFER)
                     ) { throwable, retry -> throwable }
                 }
-                .takeWhile { pollingEnabled }
-                .doOnNext { rates -> list.postValue(rates) }
                 .subscribe()
         )
     }
 
     private fun listenCurrencyChanges() {
         compositeDouble.add(currencyChangeSubject
-            .doOnNext { pollingEnabled = false }
+            .subscribeOn(Schedulers.computation())
             .doOnNext { newCalculatedRate -> current = newCalculatedRate }
             .flatMapSingle { selectRateUseCase(current.currency) }
-            .doOnNext { rates -> list.postValue(rates) }
-            .doOnNext { pollingEnabled = true }
             .subscribe())
     }
 
     private fun listenAmountChanges() {
         compositeDouble.add(amountChangeSubject
-            .doOnNext { pollingEnabled = false }
+            .subscribeOn(Schedulers.computation())
             .doOnNext { newAmount -> current = current.copy(amount = newAmount) }
             .flatMapSingle { recalculateRatesUseCase(current.amount) }
-            .doOnNext { rates -> list.postValue(rates) }
-            .doOnNext { pollingEnabled = true }
             .subscribe()
         )
     }
@@ -109,5 +110,6 @@ class HomeViewModel @Inject constructor(
 
     companion object {
         private const val REFRESH_INTERVAL: Long = 1
+        private const val IGNORE_INTERVAL: Long = 400
     }
 }
