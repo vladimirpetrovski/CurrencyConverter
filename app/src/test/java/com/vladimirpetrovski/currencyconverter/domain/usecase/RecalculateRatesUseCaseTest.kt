@@ -129,7 +129,7 @@ class RecalculateRatesUseCaseTest {
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 115.99999999999999,
+                amount = 116.0,
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
