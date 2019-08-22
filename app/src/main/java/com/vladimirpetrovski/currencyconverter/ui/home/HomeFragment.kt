@@ -37,9 +37,16 @@ class HomeFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         observe()
-        if (savedInstanceState == null) {
-            viewModel.load()
-        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
+    }
+
+    override fun onPause() {
+        viewModel.unload()
+        super.onPause()
     }
 
     private fun observe() {
