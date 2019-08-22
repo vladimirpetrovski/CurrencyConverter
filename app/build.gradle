@@ -42,13 +42,13 @@ android {
 
             dimension "environment"
 
-            buildConfigField "String", "API_URL", "\"https://revolut.duckdns.org/\""
+            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/latest/\""
         }
 
         production {
             dimension "environment"
 
-            buildConfigField "String", "API_URL", "\"https://revolut.duckdns.org/\""
+            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/latest/\""
         }
     }
 
