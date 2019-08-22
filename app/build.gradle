@@ -42,13 +42,13 @@ android {
 
             dimension "environment"
 
-            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/latest/\""
+            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/\""
         }
 
         production {
             dimension "environment"
 
-            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/latest/\""
+            buildConfigField "String", "API_URL", "\"https://api.exchangeratesapi.io/\""
         }
     }
 
