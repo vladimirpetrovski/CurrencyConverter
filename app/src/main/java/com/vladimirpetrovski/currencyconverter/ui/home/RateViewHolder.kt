@@ -24,10 +24,6 @@ class RateViewHolder(
             .doOnNext { selectCurrency() }
             .subscribe()
 
-        itemView.rateContent.clicks()
-            .doOnNext { selectCurrency() }
-            .subscribe()
-
         itemView.amount.textChanges()
             .doOnNext { changeAmount(it) }
             .subscribe()
