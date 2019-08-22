@@ -55,12 +55,16 @@ class HomeFragment : DaggerFragment() {
                 viewModel.retry()
             }
         })
+        viewModel.selectCurrencyFinish.observe(viewLifecycleOwner, Observer {
+            recyclerViewRates.scrollToPosition(0)
+        })
     }
 
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         recyclerViewRates.layoutManager = layoutManager
         recyclerViewRates.adapter = adapter
+        recyclerViewRates.itemAnimator = RatesItemAnimator()
         recyclerViewRates.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -75,7 +79,6 @@ class HomeFragment : DaggerFragment() {
 
         adapter.setOnRateClickListener {
             viewModel.pickCurrency(it)
-            recyclerViewRates.scrollToPosition(0)
         }
 
         adapter.setOnAmountChangeListener {

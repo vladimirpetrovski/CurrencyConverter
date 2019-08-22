@@ -32,6 +32,8 @@ class HomeViewModel @Inject constructor(
 
     val error = MutableLiveData<String>()
 
+    val selectCurrencyFinish = MutableLiveData<Unit>()
+
     private val retry = PublishSubject.create<Unit>()
 
     private val currencyChangeSubject = PublishSubject.create<CalculatedRate>()
@@ -52,7 +54,7 @@ class HomeViewModel @Inject constructor(
     private fun listenRatesChanges() {
         compositeDouble.add(
             listenCalculatedRatesUseCase()
-                .throttleFirst(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
+                .throttleLast(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe {
                     list.postValue(it)
                 }
@@ -75,6 +77,7 @@ class HomeViewModel @Inject constructor(
             .subscribeOn(Schedulers.computation())
             .doOnNext { newAmount -> current = current.copy(amount = newAmount) }
             .flatMapSingle { recalculateRatesUseCase(current.amount) }
+            .doOnNext { selectCurrencyFinish.value = Unit }
             .doOnNext { resumeUpdates() }
             .subscribe()
         )

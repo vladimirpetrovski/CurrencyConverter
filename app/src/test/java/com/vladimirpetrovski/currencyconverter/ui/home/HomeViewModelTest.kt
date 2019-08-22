@@ -4,9 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.usecase.ClearCacheUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.FetchRatesUseCase
+import com.vladimirpetrovski.currencyconverter.domain.usecase.ListenCalculatedRatesUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.RecalculateRatesUseCase
 import com.vladimirpetrovski.currencyconverter.domain.usecase.SelectRateUseCase
 import com.vladimirpetrovski.currencyconverter.rule.TestSchedulerRule
+import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -39,6 +41,9 @@ class HomeViewModelTest {
 
     @Mock
     lateinit var clearCacheUseCase: ClearCacheUseCase
+
+    @Mock
+    lateinit var listenCalculatedRatesUseCase: ListenCalculatedRatesUseCase
 
     lateinit var viewModel: HomeViewModel
 
@@ -78,11 +83,13 @@ class HomeViewModelTest {
         )
 
         `when`(fetchRatesUseCase(currency, amount)).thenReturn(Single.just(givenRates))
+        `when`(listenCalculatedRatesUseCase()).thenReturn(Flowable.just(givenRates))
         viewModel = HomeViewModel(
             fetchRatesUseCase,
             selectRateUseCase,
             recalculateRatesUseCase,
-            clearCacheUseCase
+            clearCacheUseCase,
+            listenCalculatedRatesUseCase
         )
     }
 
@@ -129,6 +136,7 @@ class HomeViewModelTest {
             )
         )
         `when`(selectRateUseCase("HRK")).thenReturn(Single.just(newRates))
+        `when`(listenCalculatedRatesUseCase()).thenReturn(Flowable.just(newRates))
 
         // When
         val pickedRate = CalculatedRate(
@@ -177,6 +185,7 @@ class HomeViewModelTest {
             )
         )
         `when`(recalculateRatesUseCase(100.0)).thenReturn(Single.just(newRates))
+        `when`(listenCalculatedRatesUseCase()).thenReturn(Flowable.just(newRates))
 
         // When
         viewModel.load()

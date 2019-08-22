@@ -6,12 +6,13 @@ import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 class SelectRateUseCaseTest {
 
-    private val repo: RatesRepository = Mockito.mock(RatesRepository::class.java)
+    private val repo: RatesRepository = mock(RatesRepository::class.java)
 
     private val useCase = SelectRateUseCase(repo)
 
@@ -98,6 +99,6 @@ class SelectRateUseCaseTest {
                 isEnabled = false
             )
         )
-        test.assertValue(expected)
+        verify(repo).cachedCalculatedRates = expected
     }
 }
