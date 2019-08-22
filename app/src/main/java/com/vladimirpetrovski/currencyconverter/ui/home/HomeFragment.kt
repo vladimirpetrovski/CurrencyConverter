@@ -55,6 +55,9 @@ class HomeFragment : DaggerFragment() {
                 viewModel.retry()
             }
         })
+        viewModel.selectCurrencyFinish.observe(viewLifecycleOwner, Observer {
+            recyclerViewRates.scrollToPosition(0)
+        })
     }
 
     private fun setupRecyclerView() {
@@ -76,7 +79,6 @@ class HomeFragment : DaggerFragment() {
 
         adapter.setOnRateClickListener {
             viewModel.pickCurrency(it)
-            recyclerViewRates.scrollToPosition(0)
         }
 
         adapter.setOnAmountChangeListener {
