@@ -61,6 +61,7 @@ class HomeFragment : DaggerFragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerViewRates.layoutManager = layoutManager
         recyclerViewRates.adapter = adapter
+        recyclerViewRates.itemAnimator = RatesItemAnimator()
         recyclerViewRates.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

@@ -2,13 +2,12 @@ package com.vladimirpetrovski.currencyconverter.ui.home
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.rxbinding3.view.clicks
+import com.jakewharton.rxbinding3.view.focusChanges
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.squareup.picasso.Picasso
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.ui.utils.CropBitmapTransformation
 import com.vladimirpetrovski.currencyconverter.ui.utils.DecimalDigitsInputFilter
-import com.vladimirpetrovski.currencyconverter.ui.utils.placeCursorToEnd
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_rate.view.*
 import java.text.NumberFormat
@@ -20,12 +19,12 @@ class RateViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
 
     init {
-        itemView.amount.clicks()
-            .doOnNext { selectCurrency() }
-            .subscribe()
-
-        itemView.rateContent.clicks()
-            .doOnNext { selectCurrency() }
+        itemView.amount.focusChanges()
+            .doOnNext {
+                if (it) {
+                    selectCurrency()
+                }
+            }
             .subscribe()
 
         itemView.amount.textChanges()
@@ -42,7 +41,6 @@ class RateViewHolder(
 
         itemView.amount.setText(format.format(item.amount))
         itemView.amount.filters = arrayOf(filter)
-        itemView.amount.isFocusableInTouchMode = item.isEnabled
     }
 
     private fun loadFlagImage(item: CalculatedRate) {
@@ -57,9 +55,6 @@ class RateViewHolder(
 
     private fun selectCurrency() {
         clickListener(adapterPosition)
-        itemView.amount.placeCursorToEnd()
-        itemView.amount.requestFocus()
-        itemView.amount.isFocusableInTouchMode = true
     }
 
     private fun changeAmount(text: CharSequence) {
