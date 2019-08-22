@@ -52,7 +52,7 @@ class HomeViewModel @Inject constructor(
     private fun listenRatesChanges() {
         compositeDouble.add(
             listenCalculatedRatesUseCase()
-                .throttleFirst(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
+                .throttleLast(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe {
                     list.postValue(it)
                 }
