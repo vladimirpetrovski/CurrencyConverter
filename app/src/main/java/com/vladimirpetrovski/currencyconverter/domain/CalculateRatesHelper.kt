@@ -19,7 +19,8 @@ object CalculateRatesHelper {
 
         list.add(
             0, CalculatedRate(
-                amount = amount
+                amount = amount,
+                isEnabled = true
             )
         ) // selected rate
 
@@ -34,7 +35,7 @@ object CalculateRatesHelper {
         return oldCalculatedRates.map { calculatedRate ->
 
             val rate = latestRates.find {
-                it.currency == calculatedRate.currency
+                it.currency == calculatedRate.currency && it.rate != 1.0
             } ?: return@map calculatedRate.copy(
                 amount = amount,
                 isEnabled = true

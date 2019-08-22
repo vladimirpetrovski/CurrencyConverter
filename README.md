@@ -1,4 +1,4 @@
-# CurrencyConverter
+# Rates - Lite Currency Converter
 CurrencyConverter is a simple app where you can easily convert most used currencies by tapping on the currency and entering any amount of money.
 
 The architecture is based on [Clean architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) according to Uncle Bob. Technologies that were used in this projects are Kotlin, MVVM, RxJava and Dagger2.

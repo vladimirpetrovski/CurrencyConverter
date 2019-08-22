@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
     private val listenCalculatedRatesUseCase: ListenCalculatedRatesUseCase
 ) : ViewModel() {
 
-    private val compositeDouble = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     val list = MutableLiveData<List<CalculatedRate>>()
 
@@ -51,8 +51,12 @@ class HomeViewModel @Inject constructor(
         startPolling()
     }
 
+    fun unload() {
+        compositeDisposable.clear()
+    }
+
     private fun listenRatesChanges() {
-        compositeDouble.add(
+        compositeDisposable.add(
             listenCalculatedRatesUseCase()
                 .throttleLast(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe {
@@ -62,7 +66,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun listenCurrencyChanges() {
-        compositeDouble.add(currencyChangeSubject
+        compositeDisposable.add(currencyChangeSubject
             .doOnNext { pauseUpdates() }
             .subscribeOn(Schedulers.computation())
             .doOnNext { newCalculatedRate -> current = newCalculatedRate }
@@ -72,7 +76,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun listenAmountChanges() {
-        compositeDouble.add(amountChangeSubject
+        compositeDisposable.add(amountChangeSubject
             .doOnNext { pauseUpdates() }
             .subscribeOn(Schedulers.computation())
             .doOnNext { newAmount -> current = current.copy(amount = newAmount) }
@@ -84,31 +88,30 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun startPolling() {
-        compositeDouble.add(
-            this.pollingEnabledSubject.distinctUntilChanged().toFlowable(BackpressureStrategy.LATEST)
-                .switchMap {
-                    if (it) {
-                        return@switchMap Flowable.interval(0, REFRESH_INTERVAL, TimeUnit.SECONDS)
-                            .subscribeOn(Schedulers.io())
-                            .flatMapSingle {
-                                fetchRatesUseCase(
-                                    baseCurrency = current.currency,
-                                    amount = current.amount
-                                )
-                            }
-                            .doOnError { error.postValue(it.message) }
-                            .retryWhen {
-                                Flowables.zip(
-                                    it,
-                                    retry.toFlowable(BackpressureStrategy.BUFFER)
-                                ) { throwable, retry -> throwable }
-                            }
-                            .takeWhile { pollingEnabledSubject.value == true }
-                    }
-                    return@switchMap Flowable.empty<Any>()
+        compositeDisposable.add(pollingEnabledSubject.distinctUntilChanged()
+            .toFlowable(BackpressureStrategy.LATEST)
+            .switchMap {
+                if (it) {
+                    return@switchMap Flowable.interval(0, REFRESH_INTERVAL, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .flatMapSingle {
+                            fetchRatesUseCase(
+                                baseCurrency = current.currency,
+                                amount = current.amount
+                            )
+                        }
+                        .doOnError { error.postValue(it.message) }
+                        .retryWhen {
+                            Flowables.zip(
+                                it,
+                                retry.toFlowable(BackpressureStrategy.BUFFER)
+                            ) { throwable, retry -> throwable }
+                        }
+                        .takeWhile { pollingEnabledSubject.value == true }
                 }
-                .subscribe()
-        )
+                return@switchMap Flowable.empty<Any>()
+            }
+            .subscribe())
         pollingEnabledSubject.onNext(true)
     }
 
@@ -134,7 +137,6 @@ class HomeViewModel @Inject constructor(
 
     override fun onCleared() {
         clearCacheUseCase()
-        compositeDouble.clear()
         super.onCleared()
     }
 
