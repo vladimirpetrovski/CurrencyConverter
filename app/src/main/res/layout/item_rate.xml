@@ -9,6 +9,7 @@
   android:paddingBottom="12dp"
   android:paddingStart="20dp"
   android:paddingEnd="20dp"
+  android:background="@color/white"
   android:orientation="horizontal">
 
   <ImageView

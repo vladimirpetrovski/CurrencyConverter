@@ -10,6 +10,8 @@ In order to create production-ready APK use the production flavor.
 
     ./gradlew productionRelease
 
+## Download
+[Play Store](https://play.google.com/store/apps/details?id=com.vladimirpetrovski.currencyconverter)
 
 ## Contribution
 * We use [GitFlow](http://gitversion.readthedocs.io/en/latest/git-branching-strategies/gitflow-examples/).
