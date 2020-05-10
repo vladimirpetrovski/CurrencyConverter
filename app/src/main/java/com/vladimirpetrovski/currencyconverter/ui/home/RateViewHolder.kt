@@ -11,6 +11,7 @@ import com.vladimirpetrovski.currencyconverter.ui.utils.DecimalDigitsInputFilter
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 import kotlinx.android.synthetic.main.item_rate.view.*
 import java.text.NumberFormat
+import java.text.ParseException
 
 class RateViewHolder(
     itemView: View,
@@ -66,6 +67,8 @@ class RateViewHolder(
                         amountChangeListener(it.toDouble())
                     }
                 } catch (e: NumberFormatException) {
+                    amountChangeListener(0.0)
+                } catch (e: ParseException) {
                     amountChangeListener(0.0)
                 }
             } else {
