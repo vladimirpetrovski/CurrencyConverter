@@ -27,7 +27,6 @@ class RateViewHolder(
                 }
             }
             .subscribe()
-
         itemView.amount.textChanges()
             .doOnNext { changeAmount(it) }
             .subscribe()
@@ -79,9 +78,8 @@ class RateViewHolder(
 
     companion object {
         private val filter = DecimalDigitsInputFilter(10, 2)
-        private val format: NumberFormat = NumberFormat.getInstance().apply {
+        private val format = NumberFormat.getInstance().apply {
             this.maximumFractionDigits = 2
-            this.isGroupingUsed = false
         }
     }
 }
