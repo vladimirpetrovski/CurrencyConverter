@@ -21,13 +21,13 @@ class SelectRateUseCaseTest {
         val rates = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
         `when`(repo.fetchLatestRates("EUR")).thenReturn(Single.just(rates))
@@ -36,25 +36,25 @@ class SelectRateUseCaseTest {
                 currency = "EUR",
                 flagUrl = "https://www.countryflags.io/EU/flat/64.png",
                 description = "Euro",
-                amount = 1.0,
+                amount = 1.0.toBigDecimal(),
                 isEnabled = true
             ), CalculatedRate(
                 currency = "HRK",
                 flagUrl = "https://www.countryflags.io/HR/flat/64.png",
                 description = "Kuna",
-                amount = 7.43,
+                amount = 7.43.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 1.16,
+                amount = 1.16.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
                 flagUrl = "https://www.countryflags.io/AU/flat/64.png",
                 description = "Australian Dollar",
-                amount = 1.61,
+                amount = 1.61.toBigDecimal(),
                 isEnabled = false
             )
         )
@@ -76,26 +76,26 @@ class SelectRateUseCaseTest {
                 currency = "HRK",
                 flagUrl = "https://www.countryflags.io/HR/flat/64.png",
                 description = "Kuna",
-                amount = 7.43,
+                amount = 7.43.toBigDecimal(),
                 isEnabled = false
             ),
             CalculatedRate(
                 currency = "EUR",
                 flagUrl = "https://www.countryflags.io/EU/flat/64.png",
                 description = "Euro",
-                amount = 1.0,
+                amount = 1.0.toBigDecimal(),
                 isEnabled = true
             ), CalculatedRate(
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 1.16,
+                amount = 1.16.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
                 flagUrl = "https://www.countryflags.io/AU/flat/64.png",
                 description = "Australian Dollar",
-                amount = 1.61,
+                amount = 1.61.toBigDecimal(),
                 isEnabled = false
             )
         )

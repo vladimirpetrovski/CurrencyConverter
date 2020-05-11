@@ -15,6 +15,7 @@ import io.reactivex.rxkotlin.Flowables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class HomeViewModel @Inject constructor(
 
     private val currencyChangeSubject = PublishSubject.create<CalculatedRate>()
 
-    private val amountChangeSubject = PublishSubject.create<Double>()
+    private val amountChangeSubject = PublishSubject.create<BigDecimal>()
 
     private val pollingEnabledSubject = BehaviorSubject.create<Boolean>()
 
@@ -58,7 +59,7 @@ class HomeViewModel @Inject constructor(
     private fun listenRatesChanges() {
         compositeDisposable.add(
             listenCalculatedRatesUseCase()
-                .throttleLast(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
+                .throttleLatest(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe {
                     list.postValue(it)
                 }
@@ -77,11 +78,12 @@ class HomeViewModel @Inject constructor(
 
     private fun listenAmountChanges() {
         compositeDisposable.add(amountChangeSubject
+            .debounce(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
             .doOnNext { pauseUpdates() }
             .subscribeOn(Schedulers.computation())
             .doOnNext { newAmount -> current = current.copy(amount = newAmount) }
             .flatMapSingle { recalculateRatesUseCase(current.amount) }
-            .doOnNext { selectCurrencyFinish.value = Unit }
+            .doOnNext { selectCurrencyFinish.postValue(Unit) }
             .doOnNext { resumeUpdates() }
             .subscribe()
         )
@@ -119,7 +121,7 @@ class HomeViewModel @Inject constructor(
         currencyChangeSubject.onNext(calculatedRate)
     }
 
-    fun changeAmount(newAmount: Double) {
+    fun changeAmount(newAmount: BigDecimal) {
         amountChangeSubject.onNext(newAmount)
     }
 
