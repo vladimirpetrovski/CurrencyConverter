@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.vladimirpetrovski.currencyconverter.R
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class RatesAdapter @Inject constructor() :
@@ -53,9 +54,9 @@ class RatesAdapter @Inject constructor() :
         }
     }
 
-    fun setOnAmountChangeListener(listener: (Double) -> Unit) {
+    fun setOnAmountChangeListener(listener: (BigDecimal) -> Unit) {
         onAmountChangeListener = object : OnAmountChangeListener {
-            override fun onChange(amount: Double) {
+            override fun onChange(amount: BigDecimal) {
                 listener(amount)
             }
         }
@@ -68,7 +69,7 @@ class RatesAdapter @Inject constructor() :
 
     interface OnAmountChangeListener {
 
-        fun onChange(amount: Double)
+        fun onChange(amount: BigDecimal)
     }
 
     class RatesDiffUtil(

@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) : InputFilter {
 
     private val pattern =
-        Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+        Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\,[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\,)?")
 
     override fun filter(
         source: CharSequence,
@@ -17,7 +17,6 @@ class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) : In
         dstart: Int,
         dend: Int
     ): CharSequence? {
-
         val matcher = pattern.matcher(dest)
         return if (!matcher.matches()) "" else null
     }

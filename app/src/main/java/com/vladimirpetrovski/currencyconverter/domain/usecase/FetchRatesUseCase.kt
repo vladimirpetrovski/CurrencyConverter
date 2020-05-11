@@ -1,10 +1,10 @@
 package com.vladimirpetrovski.currencyconverter.domain.usecase
 
-import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper.calculate
-import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper.initialCalculate
+import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
 import io.reactivex.Single
+import java.math.BigDecimal
 import javax.inject.Inject
 
 /**
@@ -13,21 +13,26 @@ import javax.inject.Inject
  * @return new calculated list.
  */
 class FetchRatesUseCase @Inject constructor(
-    private val ratesRepository: RatesRepository
+    private val ratesRepository: RatesRepository,
+    private val calculateRatesHelper: CalculateRatesHelper
 ) {
 
     operator fun invoke(
         baseCurrency: String,
-        amount: Double
+        amount: BigDecimal
     ): Single<List<CalculatedRate>> {
         return ratesRepository.fetchLatestRates(baseCurrency)
             .map { latestRates ->
                 if (ratesRepository.cachedCalculatedRates.isEmpty()) {
-                    val list = initialCalculate(amount, latestRates)
+                    val list = calculateRatesHelper.initialCalculate(amount, latestRates)
                     ratesRepository.cachedCalculatedRates = list
                     return@map list
                 }
-                val list = calculate(ratesRepository.cachedCalculatedRates, amount, latestRates)
+                val list = calculateRatesHelper.calculate(
+                    ratesRepository.cachedCalculatedRates,
+                    amount,
+                    latestRates
+                )
                 ratesRepository.cachedCalculatedRates = list
                 return@map list
             }
