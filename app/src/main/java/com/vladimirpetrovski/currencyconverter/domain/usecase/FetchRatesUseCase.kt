@@ -5,6 +5,7 @@ import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper.initi
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
 import io.reactivex.Single
+import java.math.BigDecimal
 import javax.inject.Inject
 
 /**
@@ -18,7 +19,7 @@ class FetchRatesUseCase @Inject constructor(
 
     operator fun invoke(
         baseCurrency: String,
-        amount: Double
+        amount: BigDecimal
     ): Single<List<CalculatedRate>> {
         return ratesRepository.fetchLatestRates(baseCurrency)
             .map { latestRates ->

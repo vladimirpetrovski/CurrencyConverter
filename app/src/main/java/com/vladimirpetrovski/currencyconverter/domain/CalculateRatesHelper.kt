@@ -2,11 +2,12 @@ package com.vladimirpetrovski.currencyconverter.domain
 
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
+import java.math.BigDecimal
 import java.util.Currency
 
 object CalculateRatesHelper {
 
-    fun initialCalculate(amount: Double, latestRates: List<Rate>): List<CalculatedRate> {
+    fun initialCalculate(amount: BigDecimal, latestRates: List<Rate>): List<CalculatedRate> {
         val list = latestRates.map { rate ->
             return@map CalculatedRate(
                 currency = rate.currency,
@@ -29,13 +30,13 @@ object CalculateRatesHelper {
 
     fun calculate(
         oldCalculatedRates: List<CalculatedRate>,
-        amount: Double,
+        amount: BigDecimal,
         latestRates: List<Rate>
     ): List<CalculatedRate> {
         return oldCalculatedRates.map { calculatedRate ->
 
             val rate = latestRates.find {
-                it.currency == calculatedRate.currency && it.rate != 1.0
+                it.currency == calculatedRate.currency && it.rate != 1.0.toBigDecimal()
             } ?: return@map calculatedRate.copy(
                 amount = amount,
                 isEnabled = true

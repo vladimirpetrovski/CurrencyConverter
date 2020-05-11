@@ -10,17 +10,17 @@ class CalculateRatesHelperTest {
     @Test
     fun `initialCalculate should create EUR rate as first item`() {
         // Given
-        val initialAmount = 1.0
+        val initialAmount = 1.0.toBigDecimal()
         val rates = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
 
@@ -32,7 +32,6 @@ class CalculateRatesHelperTest {
         assertEquals("EUR", calculatedRate.currency)
         assertEquals("Euro", calculatedRate.description)
         assertEquals("https://www.countryflags.io/EU/flat/64.png", calculatedRate.flagUrl)
-        assertEquals(1.0, calculatedRate.amount, .2)
 
         assert(initialList.size == 4)
     }
@@ -40,17 +39,17 @@ class CalculateRatesHelperTest {
     @Test
     fun `initialCalculate should return calculated amount list from the given latest rates`() {
         // Given
-        val initalAmount = 1.0
+        val initalAmount = 1.toBigDecimal()
         val rates = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
 
@@ -63,25 +62,25 @@ class CalculateRatesHelperTest {
                 currency = "EUR",
                 flagUrl = "https://www.countryflags.io/EU/flat/64.png",
                 description = "Euro",
-                amount = 1.0,
+                amount = 1.toBigDecimal(),
                 isEnabled = true
             ), CalculatedRate(
                 currency = "HRK",
                 flagUrl = "https://www.countryflags.io/HR/flat/64.png",
                 description = "Kuna",
-                amount = 7.43,
+                amount = 7.43.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 1.16,
+                amount = 1.16.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
                 flagUrl = "https://www.countryflags.io/AU/flat/64.png",
                 description = "Australian Dollar",
-                amount = 1.61,
+                amount = 1.61.toBigDecimal(),
                 isEnabled = false
             )
         )
@@ -92,31 +91,31 @@ class CalculateRatesHelperTest {
     @Test
     fun `calculate should return calculated amount list from the given latest rates`() {
         // Given
-        val givenAmount = 2.0
+        val givenAmount = 2.toBigDecimal()
         val initialRates = listOf(
             CalculatedRate(
                 currency = "EUR",
                 flagUrl = "https://www.countryflags.io/EU/flat/64.png",
                 description = "Euro",
-                amount = 1.0,
+                amount = 1.0.toBigDecimal(),
                 isEnabled = true
             ), CalculatedRate(
                 currency = "HRK",
                 flagUrl = "https://www.countryflags.io/HR/flat/64.png",
                 description = "Kuna",
-                amount = 7.43,
+                amount = 7.43.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 1.16,
+                amount = 1.16.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
                 flagUrl = "https://www.countryflags.io/AU/flat/64.png",
                 description = "Australian Dollar",
-                amount = 1.61,
+                amount = 1.61.toBigDecimal(),
                 isEnabled = false
             )
         )
@@ -124,13 +123,13 @@ class CalculateRatesHelperTest {
         val rates = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
 
@@ -143,25 +142,25 @@ class CalculateRatesHelperTest {
                 currency = "EUR",
                 flagUrl = "https://www.countryflags.io/EU/flat/64.png",
                 description = "Euro",
-                amount = 2.0,
+                amount = 2.toBigDecimal(),
                 isEnabled = true
             ), CalculatedRate(
                 currency = "HRK",
                 flagUrl = "https://www.countryflags.io/HR/flat/64.png",
                 description = "Kuna",
-                amount = 14.86,
+                amount = 14.86.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "USD",
                 flagUrl = "https://www.countryflags.io/US/flat/64.png",
                 description = "US Dollar",
-                amount = 2.32,
+                amount = 2.32.toBigDecimal(),
                 isEnabled = false
             ), CalculatedRate(
                 currency = "AUD",
                 flagUrl = "https://www.countryflags.io/AU/flat/64.png",
                 description = "Australian Dollar",
-                amount = 3.22,
+                amount = 3.22.toBigDecimal(),
                 isEnabled = false
             )
         )

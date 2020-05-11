@@ -26,13 +26,13 @@ class RatesRepositoryImplTest {
         val expected = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
         test.assertValue(expected)
@@ -51,13 +51,13 @@ class RatesRepositoryImplTest {
         val expected = listOf(
             Rate(
                 currency = "HRK",
-                rate = 7.43
+                rate = 7.43.toBigDecimal()
             ), Rate(
                 currency = "USD",
-                rate = 1.16
+                rate = 1.16.toBigDecimal()
             ), Rate(
                 currency = "AUD",
-                rate = 1.61
+                rate = 1.61.toBigDecimal()
             )
         )
         assertEquals(expected, repo.cachedLatestRates)
@@ -75,7 +75,7 @@ class RatesRepositoryImplTest {
         repo.clear()
 
         // Then
-        assert(repo.cachedLatestRates.size == 0)
-        assert(repo.cachedCalculatedRates.size == 0)
+        assert(repo.cachedLatestRates.isEmpty())
+        assert(repo.cachedCalculatedRates.isEmpty())
     }
 }
