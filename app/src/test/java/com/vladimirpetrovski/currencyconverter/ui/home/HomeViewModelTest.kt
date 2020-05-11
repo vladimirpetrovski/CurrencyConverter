@@ -2,21 +2,19 @@ package com.vladimirpetrovski.currencyconverter.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
-import com.vladimirpetrovski.currencyconverter.domain.usecase.ClearCacheUseCase
-import com.vladimirpetrovski.currencyconverter.domain.usecase.FetchRatesUseCase
-import com.vladimirpetrovski.currencyconverter.domain.usecase.ListenCalculatedRatesUseCase
-import com.vladimirpetrovski.currencyconverter.domain.usecase.RecalculateRatesUseCase
-import com.vladimirpetrovski.currencyconverter.domain.usecase.SelectRateUseCase
+import com.vladimirpetrovski.currencyconverter.domain.usecase.*
 import com.vladimirpetrovski.currencyconverter.rule.TestSchedulerRule
 import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import java.util.concurrent.TimeUnit
 
@@ -189,11 +187,61 @@ class HomeViewModelTest {
 
         // When
         viewModel.load()
-        testSchedulerRule.testScheduler.advanceTimeTo(1, TimeUnit.SECONDS)
+        testSchedulerRule.testScheduler.advanceTimeBy(400, TimeUnit.SECONDS)
         viewModel.changeAmount(100.0)
+        testSchedulerRule.testScheduler.advanceTimeBy(100, TimeUnit.SECONDS)
 
         // Then
         verify(recalculateRatesUseCase).invoke(100.0)
-        assertEquals(newRates, viewModel.list.value)
+    }
+
+    @Test
+    fun `change amount should ignore multiple change amount values in 400 milliseconds`() {
+        // Given
+        val newRates = listOf(
+            CalculatedRate(
+                currency = "HRK",
+                flagUrl = "https://www.countryflags.io/HR/flat/64.png",
+                description = "Kuna",
+                amount = 743.0,
+                isEnabled = false
+            ), CalculatedRate(
+                currency = "EUR",
+                flagUrl = "https://www.countryflags.io/EU/flat/64.png",
+                description = "Euro",
+                amount = 100.0,
+                isEnabled = true
+            ), CalculatedRate(
+                currency = "USD",
+                flagUrl = "https://www.countryflags.io/US/flat/64.png",
+                description = "US Dollar",
+                amount = 116.0,
+                isEnabled = false
+            ), CalculatedRate(
+                currency = "AUD",
+                flagUrl = "https://www.countryflags.io/AU/flat/64.png",
+                description = "Australian Dollar",
+                amount = 161.0,
+                isEnabled = false
+            )
+        )
+
+        `when`(recalculateRatesUseCase(100.0)).thenReturn(Single.just(newRates))
+        `when`(recalculateRatesUseCase(101.0)).thenReturn(Single.just(newRates))
+        `when`(recalculateRatesUseCase(102.0)).thenReturn(Single.just(newRates))
+        `when`(listenCalculatedRatesUseCase()).thenReturn(Flowable.just(newRates))
+
+        // When
+        viewModel.load()
+        testSchedulerRule.testScheduler.advanceTimeBy(400, TimeUnit.MILLISECONDS)
+        viewModel.changeAmount(100.0)
+        testSchedulerRule.testScheduler.advanceTimeBy(300, TimeUnit.MILLISECONDS)
+        viewModel.changeAmount(101.0)
+        testSchedulerRule.testScheduler.advanceTimeBy(150, TimeUnit.MILLISECONDS)
+        viewModel.changeAmount(102.0)
+        testSchedulerRule.testScheduler.advanceTimeBy(400, TimeUnit.MILLISECONDS)
+
+        // Then
+        verify(recalculateRatesUseCase, times(1)).invoke(anyDouble())
     }
 }

@@ -58,7 +58,7 @@ class HomeViewModel @Inject constructor(
     private fun listenRatesChanges() {
         compositeDisposable.add(
             listenCalculatedRatesUseCase()
-                .throttleLast(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
+                .throttleLatest(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
                 .subscribe {
                     list.postValue(it)
                 }
@@ -77,11 +77,12 @@ class HomeViewModel @Inject constructor(
 
     private fun listenAmountChanges() {
         compositeDisposable.add(amountChangeSubject
+            .debounce(IGNORE_INTERVAL, TimeUnit.MILLISECONDS)
             .doOnNext { pauseUpdates() }
             .subscribeOn(Schedulers.computation())
             .doOnNext { newAmount -> current = current.copy(amount = newAmount) }
             .flatMapSingle { recalculateRatesUseCase(current.amount) }
-            .doOnNext { selectCurrencyFinish.value = Unit }
+            .doOnNext { selectCurrencyFinish.postValue(Unit) }
             .doOnNext { resumeUpdates() }
             .subscribe()
         )
