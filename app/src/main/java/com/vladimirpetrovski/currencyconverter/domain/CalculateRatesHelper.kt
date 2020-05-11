@@ -4,8 +4,9 @@ import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
 import java.math.BigDecimal
 import java.util.Currency
+import javax.inject.Inject
 
-object CalculateRatesHelper {
+class CalculateRatesHelper @Inject constructor() {
 
     fun initialCalculate(amount: BigDecimal, latestRates: List<Rate>): List<CalculatedRate> {
         val list = latestRates.map { rate ->

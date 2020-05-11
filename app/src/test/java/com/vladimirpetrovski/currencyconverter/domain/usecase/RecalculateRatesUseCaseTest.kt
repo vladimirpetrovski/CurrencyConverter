@@ -1,5 +1,6 @@
 package com.vladimirpetrovski.currencyconverter.domain.usecase
 
+import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
@@ -13,7 +14,9 @@ class RecalculateRatesUseCaseTest {
 
     private val repo: RatesRepository = Mockito.mock(RatesRepository::class.java)
 
-    private val useCase = RecalculateRatesUseCase(repo)
+    private val calculateRatesHelper = CalculateRatesHelper()
+
+    private val useCase = RecalculateRatesUseCase(repo, calculateRatesHelper)
 
     @Before
     fun setUp() {

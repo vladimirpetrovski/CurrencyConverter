@@ -7,6 +7,8 @@ import org.junit.Test
 
 class CalculateRatesHelperTest {
 
+    private val calculateRatesHelper = CalculateRatesHelper()
+
     @Test
     fun `initialCalculate should create EUR rate as first item`() {
         // Given
@@ -25,7 +27,7 @@ class CalculateRatesHelperTest {
         )
 
         // When
-        val initialList = CalculateRatesHelper.initialCalculate(initialAmount, rates)
+        val initialList = calculateRatesHelper.initialCalculate(initialAmount, rates)
 
         // Then
         val calculatedRate = initialList[0]
@@ -54,7 +56,7 @@ class CalculateRatesHelperTest {
         )
 
         // When
-        val initialList = CalculateRatesHelper.initialCalculate(initalAmount, rates)
+        val initialList = calculateRatesHelper.initialCalculate(initalAmount, rates)
 
         // Then
         val expected = listOf(
@@ -134,7 +136,7 @@ class CalculateRatesHelperTest {
         )
 
         // When
-        val initialList = CalculateRatesHelper.calculate(initialRates, givenAmount, rates)
+        val initialList = calculateRatesHelper.calculate(initialRates, givenAmount, rates)
 
         // Then
         val expected = listOf(
@@ -174,7 +176,7 @@ class CalculateRatesHelperTest {
         val currency = "EUR"
 
         // When
-        val displayName = CalculateRatesHelper.getDisplayName(currency)
+        val displayName = calculateRatesHelper.getDisplayName(currency)
 
         // Then
         assertEquals("Euro", displayName)
@@ -186,7 +188,7 @@ class CalculateRatesHelperTest {
         val currency = "ABC"
 
         // When
-        CalculateRatesHelper.getDisplayName(currency)
+        calculateRatesHelper.getDisplayName(currency)
     }
 
     @Test
@@ -195,7 +197,7 @@ class CalculateRatesHelperTest {
         val currency = "EUR"
 
         // When
-        val flagUrl = CalculateRatesHelper.getFlagUrl("EUR")
+        val flagUrl = calculateRatesHelper.getFlagUrl("EUR")
 
         // Then
         assertEquals("https://www.countryflags.io/EU/flat/64.png", flagUrl)
@@ -207,6 +209,6 @@ class CalculateRatesHelperTest {
         val currency = "EURR"
 
         // When
-        CalculateRatesHelper.getFlagUrl(currency)
+        calculateRatesHelper.getFlagUrl(currency)
     }
 }

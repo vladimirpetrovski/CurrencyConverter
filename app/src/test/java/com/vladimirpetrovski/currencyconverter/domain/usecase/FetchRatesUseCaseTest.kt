@@ -1,5 +1,6 @@
 package com.vladimirpetrovski.currencyconverter.domain.usecase
 
+import com.vladimirpetrovski.currencyconverter.domain.CalculateRatesHelper
 import com.vladimirpetrovski.currencyconverter.domain.model.CalculatedRate
 import com.vladimirpetrovski.currencyconverter.domain.model.Rate
 import com.vladimirpetrovski.currencyconverter.domain.repository.RatesRepository
@@ -8,13 +9,14 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import java.math.MathContext
 
 class FetchRatesUseCaseTest {
 
     private val repo: RatesRepository = mock(RatesRepository::class.java)
 
-    private val useCase = FetchRatesUseCase(repo)
+    private val calculateRatesHelper = CalculateRatesHelper()
+
+    private val useCase = FetchRatesUseCase(repo, calculateRatesHelper)
 
     @Before
     fun setup() {
