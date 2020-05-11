@@ -1,10 +1,12 @@
 apply plugin: "com.android.application"
-
 apply plugin: "kotlin-android"
-
 apply plugin: "kotlin-android-extensions"
-
 apply plugin: "kotlin-kapt"
+
+def homePath = System.properties['user.home']
+def keystorePropertiesFile = file("$homePath/keys/CurrencyConverter/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 29
@@ -18,11 +20,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
-        release {
-            storeFile file("../keystore/rates.keystore")
-            storePassword "rates1234"
-            keyAlias "rates"
-            keyPassword "rates1234"
+        config {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
 
@@ -30,7 +32,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.config
         }
     }
 
