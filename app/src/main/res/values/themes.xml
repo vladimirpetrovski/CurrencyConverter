@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="Base.Theme.Rates" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- All theme styles goes here -->
+  </style>
+
+  <style name="Theme.Rates" parent="Base.Theme.Rates">
+    <item name="android:statusBarColor">@android:color/black</item>
+    <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+  </style>
+
+</resources>

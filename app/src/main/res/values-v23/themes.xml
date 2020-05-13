@@ -1,0 +1,8 @@
+<resources>
+
+  <style name="Theme.Rates" parent="Base.Theme.Rates">
+    <item name="android:statusBarColor">?android:colorBackground</item>
+    <item name="android:windowLightStatusBar">true</item>
+  </style>
+  
+</resources>
