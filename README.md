@@ -11,7 +11,8 @@ In order to create production-ready APK use the production flavor.
     ./gradlew productionRelease
 
 ## Download
-[Play Store](https://play.google.com/store/apps/details?id=com.vladimirpetrovski.currencyconverter)
+<a href="https://play.google.com/store/apps/details?id=com.vladimirpetrovski.currencyconverter" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="90"/></a>
 
 ## Contribution
 * We use [GitFlow](http://gitversion.readthedocs.io/en/latest/git-branching-strategies/gitflow-examples/).
