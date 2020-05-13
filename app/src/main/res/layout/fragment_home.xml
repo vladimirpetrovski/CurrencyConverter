@@ -9,7 +9,7 @@
     android:id="@+id/recyclerViewRates"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?android:colorBackground"
     tools:listitem="@layout/item_rate" />
 
 </FrameLayout>
